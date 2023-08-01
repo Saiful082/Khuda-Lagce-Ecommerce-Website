@@ -50,14 +50,24 @@ const Signup = () => {
             }
         })
     }
-
-    const handleSubmit = (e) => {
+    console.log(process.env.REACT_APP_SERVER_DOMIN);
+    const handleSubmit = async(e) => {
         e.preventDefault()
         const {firstname, email, password, confirmpassword} = data;
         if(firstname && email && password && confirmpassword){
             if(password === confirmpassword){
+                const fetchData = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/singup`, {
+                method : 'POST',
+                headers : {
+                    'content-type' : 'application/json'
+                },
+                body : JSON.stringify(data)
+                })
+                const dataRes = await fetchData.json()
+                console.log(dataRes);
+
                 alert('Successfull')
-                navigate('/login')
+                // navigate('/login')
             }
             else{
                 alert('Password and conform Password not mached')
@@ -72,11 +82,11 @@ const Signup = () => {
         <div className='p-3 md:p-4'>
             <div className='w-full max-w-sm bg-white m-auto  flex-col p-4'>
                 {/* <h1 className='text-center text-2xl fond-bold'>Sign Up</h1> */}
-                <div className='w-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative'>
-                    <img src={data.image? data.image : signupImage} className='w-full ' />
+                <div className='w-20 h-20 overflow-hidden rounded-full drop-shadow-md shadow-md m-auto relative'>
+                    <img src={data.image? data.image : signupImage} className='w-full h-full' />
 
                     <label htmlFor="ProfileImage">
-                    <div className='absolute bottom-0 h-1/3 bg-slate-500 w-full text-center cursor-pointer'>
+                    <div className='absolute bottom-0 h-1/3 bg-slate-500 bg-opacity-50 w-full text-center cursor-pointer'>
                         <p className='text-sm p-1 text-white'>Uplode</p>
                     </div>
                     <input type={'file'} id='ProfileImage' accept='image/*' className='hidden' onChange={handleUplodeProfile}/>
